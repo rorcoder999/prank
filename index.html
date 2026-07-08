@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>PrankLab 🧪 - Ultimate Interactive Pranks</title>
+
+  <!-- Tailwind CSS for modern, responsive layouts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Lucide Icons for clean visuals -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --yes: #9b51e0;
+      --yesHover: #803bec;
+    }
+
+    body {
+      min-height: 100svh;
+      background: radial-gradient(circle at top left, #ffd6e7 0%, #e8dbfc 40%, #c2e9fb 100%);
+      overflow-x: hidden;
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* Standardized button styles */
+    .btn-runaway {
+      transition: left 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.1), top 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+
+    /* Animation */
+    .pop-in {
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Terminal text animation */
+    .typing {
+      border-right: 2px solid #39ff14;
+      white-space: nowrap;
+      animation: blink 0.75s step-end infinite;
+    }
+
+    @keyframes blink {
+      from, to { border-color: transparent }
+      50% { border-color: #39ff14; }
+    }
+  </style>
+</head>
+
+<body class="flex flex-col items-center justify-between p-4 md:p-6 text-slate-800">
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- HEADER (hidden during active full-screen pranks) -->
+  <header id="siteHeader" class="w-full max-w-4xl flex items-center justify-between py-4 mb-6 z-10">
+    <div class="flex items-center gap-2 cursor-pointer" onclick="showView('home')">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-purple-200">
+        <i data-lucide="flask-conical" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <span class="font-black text-xl tracking-tight bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">PrankLab</span>
+        <span class="text-xs block text-slate-500 font-semibold uppercase tracking-wider">Host & Share</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="showView('generator')" class="glass px-4 py-2 rounded-full text-xs font-bold text-purple-700 hover:bg-white transition flex items-center gap-1.5 shadow-sm">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Custom Link Engine
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER FOR VIEWS -->
+  <main class="w-full max-w-4xl flex-grow flex items-center justify-center z-10 mb-8">
+
+    <!-- VIEW 1: HOME DASHBOARD -->
+    <section id="view-home" class="w-full pop-in">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-black tracking-tight text-slate-800 mb-3">
+          Prank Portal Suite
+        </h2>
+        <p class="text-slate-600 font-medium max-w-lg mx-auto">
+          Welcome back, <span class="text-purple-600 font-bold">Rizwan</span>. Pick an interactive prank assessment below, or build a custom link payload for your friends.
+        </p>
+      </div>
+
+      <!-- Prank Grid Selection -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card 1: Are You Gay -->
+        <div onclick="showView('prank-gay')" class="glass p-6 rounded-3xl hover:shadow-xl hover:scale-[1.02] transition duration-300 cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-500 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+              <i data-lucide="heart" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-800 mb-2">Sexuality Spectrum</h3>
+            <p class="text-slate-500 text-sm leading-relaxed mb-4">
+              The classic psychological inquiry test featuring custom rainbow assets and an absolute magnetic runaway system.
+            </p>
+          </div>
+          <div class="flex items-center justify-between text-pink-600 font-bold text-sm pt-2 border-t border-slate-100">
+            <span>Launch Prank</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition"></i>
+          </div>
+        </div>
+
+        <!-- Card 2: Are You Dumb -->
+        <div onclick="showView('prank-dumb')" class="glass p-6 rounded-3xl hover:shadow-xl hover:scale-[1.02] transition duration-300 cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+              <i data-lucide="brain" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-800 mb-2">Cognitive Density</h3>
+            <p class="text-slate-500 text-sm leading-relaxed mb-4">
+              Determine if your victim is possessing standard cognitive functions. Warns them they cannot escape the truth!
+            </p>
+          </div>
+          <div class="flex items-center justify-between text-amber-600 font-bold text-sm pt-2 border-t border-slate-100">
+            <span>Launch Prank</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition"></i>
+          </div>
+        </div>
+
+        <!-- Card 3: Fake Hacker -->
+        <div onclick="showView('prank-hacker')" class="glass p-6 rounded-3xl hover:shadow-xl hover:scale-[1.02] transition duration-300 cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+              <i data-lucide="terminal" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-800 mb-2">Retro System Scan</h3>
+            <p class="text-slate-500 text-sm leading-relaxed mb-4">
+              A high-realism terminal diagnostics display scan that "leaks" local directory contents before revealing a prank message.
+            </p>
+          </div>
+          <div class="flex items-center justify-between text-emerald-600 font-bold text-sm pt-2 border-t border-slate-100">
+            <span>Launch Prank</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Custom Link Invitation -->
+      <div class="mt-8 glass p-6 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4 text-center md:text-left">
+          <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+            <i data-lucide="link-2" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h4 class="font-extrabold text-slate-800">Want to craft custom questions?</h4>
+            <p class="text-slate-500 text-sm">Generate completely customized Yes/No prank screens using custom URL links!</p>
+          </div>
+        </div>
+        <button onclick="showView('generator')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm px-6 py-3 rounded-2xl transition duration-150 shadow-md shadow-purple-200 shrink-0">
+          Build Custom Prank Link
+        </button>
+      </div>
+    </section>
+
+
+    <!-- VIEW 2: PRANK - ARE YOU GAY -->
+    <section id="view-prank-gay" class="w-full max-w-lg hidden pop-in">
+      <div class="glass rounded-3xl p-8 text-center shadow-2xl relative">
+        <button onclick="showView('home')" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </button>
+
+        <!-- SVG Asset with blush and rainbow heart -->
+        <svg class="w-48 mx-auto mb-4 drop-shadow-md" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff5f6d" />
+              <stop offset="50%" stop-color="#ffc371" />
+              <stop offset="100%" stop-color="#8a2387" />
+            </linearGradient>
+            <linearGradient id="fur" x1="0" x2="1">
+              <stop offset="0" stop-color="#fce1cf" />
+              <stop offset="1" stop-color="#f8cbb0" />
+            </linearGradient>
+          </defs>
+          <path d="M250 50 C250 33 270 25 282 38 C294 25 314 33 314 50 C314 78 282 92 282 106 C282 92 250 78 250 50Z" fill="url(#rainbowGrad)" />
+          <path d="M90 120 C90 70 140 40 190 60 C240 40 290 70 290 120 C290 180 240 210 190 210 C140 210 90 180 90 120Z" fill="url(#fur)" />
+          <path d="M110 92 L95 55 L140 78 Z" fill="#e0a582" />
+          <path d="M270 92 L285 55 L240 78 Z" fill="#e0a582" />
+          <circle cx="160" cy="130" r="8" fill="#2d3748" />
+          <circle cx="220" cy="130" r="8" fill="#2d3748" />
+          <circle cx="145" cy="142" r="10" fill="#ffccd5" opacity="0.8"/>
+          <circle cx="235" cy="142" r="10" fill="#ffccd5" opacity="0.8"/>
+          <path d="M190 144 C186 144 182 148 182 152 C182 160 190 164 190 170 C190 164 198 160 198 152 C198 148 194 144 190 144Z" fill="#ff5f6d" />
+        </svg>
+
+        <h1 class="text-3xl font-extrabold text-slate-800 mb-6" id="gay-heading">Are you gay? 🏳️‍🌈</h1>
+
+        <div class="relative w-full h-40" id="gay-zone">
+          <button id="gay-yesBtn" class="absolute left-[15%] top-[50%] -translate-y-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-extrabold text-lg px-8 py-3.5 rounded-full shadow-lg z-25">
+            Yes
+          </button>
+          <button id="gay-noBtn" class="btn-runaway absolute left-[60%] top-[50%] -translate-y-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-extrabold text-lg px-8 py-3.5 rounded-full shadow-md z-20">
+            No
+          </button>
+        </div>
+
+        <p id="gay-hint" class="text-slate-500 font-medium text-sm mt-4">There is no escaping the truth! 🤫</p>
+
+        <!-- Dynamic Success Area -->
+        <div id="gay-success" class="hidden mt-4 pop-in text-center">
+          <h2 class="text-4xl font-black bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 bg-clip-text text-transparent mb-4">I KNEW IT! 🏳️‍🌈✨</h2>
+          <img class="w-full rounded-2xl shadow-md border border-white" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Success GIF" />
+          <button onclick="showView('home')" class="mt-6 bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition shadow">
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 3: PRANK - ARE YOU DUMB -->
+    <section id="view-prank-dumb" class="w-full max-w-lg hidden pop-in">
+      <div class="glass rounded-3xl p-8 text-center shadow-2xl relative">
+        <button onclick="showView('home')" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Cute brain assessment vector -->
+        <svg class="w-44 mx-auto mb-4 drop-shadow-md" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="brainPink" x1="0" x2="1">
+              <stop offset="0" stop-color="#ffb3c1" />
+              <stop offset="1" stop-color="#ff758f" />
+            </linearGradient>
+          </defs>
+          <!-- Left hemisphere -->
+          <path d="M160 120 C140 100 120 100 100 110 C80 120 70 140 85 160 C70 175 80 195 100 195 C110 205 130 205 145 195 C155 195 160 185 160 175 Z" fill="url(#brainPink)" />
+          <!-- Right hemisphere -->
+          <path d="M160 120 C180 100 200 100 220 110 C240 120 250 140 235 160 C250 175 240 195 220 195 C210 205 190 205 175 195 C165 195 160 185 160 175 Z" fill="url(#brainPink)" />
+          <!-- Little face specs -->
+          <circle cx="135" cy="155" r="4" fill="#333" />
+          <circle cx="185" cy="155" r="4" fill="#333" />
+          <path d="M150 168 Q160 174 170 168" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" />
+          <!-- Sweating droplet -->
+          <path d="M210 135 C210 135 214 141 214 145 C214 148 211 150 208 150 C205 150 204 148 204 145 C204 141 210 135 210 135Z" fill="#3498db" />
+        </svg>
+
+        <h1 class="text-3xl font-extrabold text-slate-800 mb-6">Are you a dummy? 🧠❌</h1>
+
+        <div class="relative w-full h-40" id="dumb-zone">
+          <button id="dumb-yesBtn" class="absolute left-[15%] top-[50%] -translate-y-1/2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-lg px-8 py-3.5 rounded-full shadow-lg z-25">
+            Yes
+          </button>
+          <button id="dumb-noBtn" class="btn-runaway absolute left-[60%] top-[50%] -translate-y-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-extrabold text-lg px-8 py-3.5 rounded-full shadow-md z-20">
+            No
+          </button>
+        </div>
+
+        <p id="dumb-hint" class="text-slate-500 font-medium text-sm mt-4">We are scanning your neural density... 📡</p>
+
+        <!-- Dynamic Success Area -->
+        <div id="dumb-success" class="hidden mt-4 pop-in text-center">
+          <h2 class="text-4xl font-black bg-gradient-to-r from-amber-500 to-red-500 bg-clip-text text-transparent mb-4">BRAIN NOT FOUND! 🔬🧠</h2>
+          <p class="text-slate-600 font-bold mb-4">Diagnosis: Complete 100% grade-A premium airhead.</p>
+          <img class="w-full rounded-2xl shadow-md border border-white" src="https://media.giphy.com/media/l41Ym49ppcDP6iY3C/giphy.gif" alt="Dumb Success GIF" />
+          <button onclick="showView('home')" class="mt-6 bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition shadow">
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 4: RETRO CYBER SYSTEM SCAN -->
+    <section id="view-prank-hacker" class="w-full max-w-2xl hidden pop-in">
+      <!-- Outer computer terminal frame -->
+      <div class="bg-[#0f141c] text-[#39ff14] font-mono rounded-3xl p-6 shadow-2xl border-4 border-slate-700 relative overflow-hidden">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div class="flex items-center gap-1.5">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-500 block"></span>
+            <span class="w-3.5 h-3.5 rounded-full bg-yellow-500 block"></span>
+            <span class="w-3.5 h-3.5 rounded-full bg-green-500 block"></span>
+          </div>
+          <span class="text-slate-500 text-xs font-bold uppercase tracking-wider">SECURE DEVICE ANALYZER V4.18</span>
+          <button onclick="showView('home')" class="text-slate-500 hover:text-slate-300 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Before Scan Area -->
+        <div id="hacker-intro" class="py-8 text-center">
+          <i data-lucide="shield-alert" class="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-pulse"></i>
+          <h2 class="text-2xl font-black text-white mb-2">Device Vulnerability Scan</h2>
+          <p class="text-slate-400 text-sm max-w-md mx-auto mb-6">
+            Run a deep verification of core directories and diagnostic checks on connected hardware elements.
+          </p>
+          <button onclick="startHackerScan()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 py-3.5 rounded-xl transition duration-150 shadow-lg shadow-emerald-950">
+            Initialize Diagnostics Check
+          </button>
+        </div>
+
+        <!-- Terminal Console (Active Scan) -->
+        <div id="hacker-terminal" class="hidden h-80 overflow-y-auto text-sm space-y-1.5 text-left p-3 bg-black/60 rounded-xl border border-slate-900">
+          <!-- Logs will populate dynamically -->
+        </div>
+
+        <!-- Final Reveal Modal overlay (built-in instead of alert!) -->
+        <div id="hacker-reveal" class="hidden absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-6 text-center z-30 animate-fade-in">
+          <div class="w-20 h-20 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-4 animate-bounce">
+            <i data-lucide="skull" class="w-10 h-10"></i>
+          </div>
+          <h2 class="text-3xl font-black text-white mb-2">CRITICAL DEVICE BREACH</h2>
+          <p class="text-red-400 font-bold mb-4">Friend, you've been thoroughly trolled! 🤡</p>
+          <p class="text-slate-400 max-w-md text-sm mb-6">
+            No real folders were harmed (not even `C:\Users\Rizwan Nizar\Documents\secret-anime-folder`), but you definitely fell for it!
+          </p>
+          <button onclick="showView('home')" class="bg-white hover:bg-slate-100 text-slate-900 font-bold px-6 py-2.5 rounded-xl transition shadow">
+            Close Terminal Assessment
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 5: DYNAMIC PRANK GENERATOR -->
+    <section id="view-generator" class="w-full max-w-2xl hidden pop-in">
+      <div class="glass rounded-3xl p-6 md:p-8 shadow-xl relative">
+        <button onclick="showView('home')" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </button>
+
+        <div class="text-center mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800">Dynamic Prank Engine</h2>
+          <p class="text-slate-500 text-sm">Create customized, shareable prank links to trap your friends.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Your Question</label>
+            <input type="text" id="gen-question" placeholder="e.g. Will you pay for my dinner tonight?" class="w-full bg-white/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold" />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">"Yes" Button Text</label>
+              <input type="text" id="gen-yes" placeholder="Yes, of course! 😍" class="w-full bg-white/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">"No" Button Text</label>
+              <input type="text" id="gen-no" placeholder="No way 🙄" class="w-full bg-white/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Victim's Name (Optional)</label>
+            <input type="text" id="gen-victim" placeholder="e.g. Rahul" class="w-full bg-white/60 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold" />
+          </div>
+
+          <button onclick="buildPrankLink()" class="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-extrabold py-3.5 rounded-xl transition duration-150 shadow-md shadow-purple-200 flex items-center justify-center gap-2">
+            <i data-lucide="link" class="w-4 h-4"></i> Generate Dynamic Link
+          </button>
+        </div>
+
+        <!-- Generated Link Output Box -->
+        <div id="gen-result" class="hidden mt-6 pt-6 border-t border-slate-200/60 pop-in">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Copy & Send This Link:</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="gen-output" readonly class="w-full bg-slate-50/80 border border-slate-200 rounded-xl px-4 py-3 text-purple-700 font-mono text-xs focus:outline-none" />
+            <button onclick="copyGeneratedLink()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-3 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0 text-sm">
+              <i data-lucide="copy" class="w-4 h-4" id="copyIcon"></i> <span id="copyText">Copy</span>
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2 font-medium">When they open this link, the site will render your custom questions automatically!</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 6: RENDER CUSTOM PRANK LOAD (Dyna-view triggered by hashtag) -->
+    <section id="view-custom-load" class="w-full max-w-lg hidden pop-in">
+      <div class="glass rounded-3xl p-8 text-center shadow-2xl relative">
+        <!-- Return home button (only visible if hosted generally, but we keep it tidy) -->
+        <button onclick="clearHashAndHome()" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="home" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Cute Question Box Graphic -->
+        <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-4 animate-bounce">
+          <i data-lucide="help-circle" class="w-8 h-8"></i>
+        </div>
+
+        <div id="custom-greeting" class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-1">Incoming Message...</div>
+        <h1 class="text-2xl md:text-3xl font-black text-slate-800 mb-8 px-2" id="custom-heading">Are you ready?</h1>
+
+        <div class="relative w-full h-40" id="custom-zone">
+          <button id="custom-yesBtn" class="absolute left-[15%] top-[50%] -translate-y-1/2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-extrabold text-lg px-8 py-3.5 rounded-full shadow-lg z-25 min-w-[120px]">
+            Yes
+          </button>
+          <button id="custom-noBtn" class="btn-runaway absolute left-[60%] top-[50%] -translate-y-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-extrabold text-lg px-8 py-3.5 rounded-full shadow-md z-20 min-w-[120px]">
+            No
+          </button>
+        </div>
+
+        <p class="text-slate-500 font-medium text-sm mt-4">Required: Respond truthfully. 🎯</p>
+
+        <!-- Custom Success Block -->
+        <div id="custom-success" class="hidden mt-4 pop-in text-center">
+          <h2 class="text-3xl font-black bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-4">RESPONSE ACCEPTED! 🎉</h2>
+          <p class="text-slate-600 font-bold mb-4" id="custom-result-sub">We logged your selection successfully.</p>
+          <img class="w-full rounded-2xl shadow-md border border-white" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Success Confetti" />
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full max-w-4xl text-center py-4 border-t border-slate-200/40 z-10">
+    <p class="text-slate-400 text-xs font-semibold">
+      PrankLab System &bull; C:\Users\Rizwan Nizar\Documents\prank-host
+    </p>
+  </footer>
+
+  <script>
+    // System Views Map
+    const views = ['home', 'prank-gay', 'prank-dumb', 'prank-hacker', 'generator', 'custom-load'];
+
+    function showView(targetId) {
+      views.forEach(v => {
+        const viewEl = document.getElementById(`view-${v}`);
+        if (v === targetId) {
+          viewEl.classList.remove('hidden');
+        } else {
+          viewEl.classList.add('hidden');
+        }
+      });
+
+      // Show/hide main header depending on active full-screen experience
+      const header = document.getElementById('siteHeader');
+      if (targetId === 'custom-load') {
+        header.classList.add('hidden');
+      } else {
+        header.classList.remove('hidden');
+      }
+
+      // Special setup when returning/resetting
+      if (targetId === 'prank-gay') resetPrank('gay');
+      if (targetId === 'prank-dumb') resetPrank('dumb');
+    }
+
+    /* ---------- RESET ACTIONS FOR RETRYING ---------- */
+    function resetPrank(type) {
+      document.getElementById(`${type}-zone`).style.display = 'block';
+      document.getElementById(`${type}-hint`).style.display = 'block';
+      document.getElementById(`${type}-success`).classList.add('hidden');
+      
+      const yesBtn = document.getElementById(`${type}-yesBtn`);
+      const noBtn = document.getElementById(`${type}-noBtn`);
+      
+      yesBtn.style.transform = 'translateY(-50%) scale(1)';
+      if (type === 'gay') {
+        yesScaleGay = 1;
+        noBtn.style.left = '60%';
+        noBtn.style.top = '50%';
+      } else if (type === 'dumb') {
+        yesScaleDumb = 1;
+        noBtn.style.left = '60%';
+        noBtn.style.top = '50%';
+      } else if (type === 'custom') {
+        yesScaleCustom = 1;
+        noBtn.style.left = '60%';
+        noBtn.style.top = '50%';
+      }
+    }
+
+    /* ---------- CONFETTI ANIMATOR ---------- */
+    const confettiCanvas = document.getElementById("confettiCanvas");
+
+    function resizeConfettiCanvas() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      confettiCanvas.width = Math.floor(window.innerWidth * dpr);
+      confettiCanvas.height = Math.floor(window.innerHeight * dpr);
+      confettiCanvas.style.width = "100vw";
+      confettiCanvas.style.height = "100vh";
+    }
+
+    resizeConfettiCanvas();
+    window.addEventListener("resize", resizeConfettiCanvas);
+    window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
+
+    const confettiInstance = confetti.create(confettiCanvas, {
+      resize: false,
+      useWorker: true
+    });
+
+    function fireRainbowConfetti() {
+      const end = Date.now() + 2000;
+      (function frame() {
+        confettiInstance({
+          particleCount: 15,
+          spread: 100,
+          startVelocity: 45,
+          ticks: 200,
+          origin: { x: Math.random(), y: Math.random() * 0.4 },
+          colors: ['#a855f7', '#ec4899', '#3b82f6', '#10b981', '#f59e0b']
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+
+      setTimeout(() => {
+        confettiInstance({
+          particleCount: 300,
+          spread: 150,
+          startVelocity: 60,
+          ticks: 240,
+          origin: { x: 0.5, y: 0.5 },
+          colors: ['#a855f7', '#ec4899', '#3b82f6', '#10b981', '#f59e0b']
+        });
+      }, 300);
+    }
+
+
+    /* ---------- RUNAWAY COMPONENT ALGORITHM ---------- */
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    // Scaling variables for each view
+    let yesScaleGay = 1;
+    let yesScaleDumb = 1;
+    let yesScaleCustom = 1;
+
+    function applyRunawayLogic(noBtnId, yesBtnId, zoneId, growHandler) {
+      const noBtn = document.getElementById(noBtnId);
+      const zone = document.getElementById(zoneId);
+
+      const moveNo = (px, py) => {
+        const z = zone.getBoundingClientRect();
+        const b = noBtn.getBoundingClientRect();
+
+        let dx = (b.left + b.width / 2) - px;
+        let dy = (b.top + b.height / 2) - py;
+
+        if (dx === 0 && dy === 0) {
+          dx = Math.random() - 0.5;
+          dy = Math.random() - 0.5;
+        }
+
+        let mag = Math.hypot(dx, dy) || 1;
+        dx /= mag;
+        dy /= mag;
+
+        // Leap distance
+        let newLeft = (b.left - z.left) + dx * 160;
+        let newTop = (b.top - z.top) + dy * 160;
+
+        // Containment within bounds
+        newLeft = clamp(newLeft, 0, z.width - b.width);
+        newTop = clamp(newTop, 0, z.height - b.height);
+
+        noBtn.style.left = newLeft + "px";
+        noBtn.style.top = newTop + "px";
+        noBtn.style.transform = "none";
+
+        growHandler();
+      };
+
+      // Pointer event boundaries
+      zone.addEventListener("pointermove", e => {
+        const b = noBtn.getBoundingClientRect();
+        const d = Math.hypot(
+          (b.left + b.width / 2) - e.clientX,
+          (b.top + b.height / 2) - e.clientY
+        );
+        if (d < 140) {
+          moveNo(e.clientX, e.clientY);
+        }
+      });
+
+      // Quick tap backup for mobile users
+      noBtn.addEventListener("pointerdown", e => {
+        e.preventDefault();
+        moveNo(e.clientX, e.clientY);
+      });
+
+      noBtn.addEventListener("click", e => e.preventDefault());
+    }
+
+    // Attach runaway instances
+    applyRunawayLogic('gay-noBtn', 'gay-yesBtn', 'gay-zone', () => {
+      yesScaleGay = Math.min(2.4, yesScaleGay + 0.12);
+      document.getElementById('gay-yesBtn').style.transform = `translateY(-50%) scale(${yesScaleGay})`;
+    });
+
+    applyRunawayLogic('dumb-noBtn', 'dumb-yesBtn', 'dumb-zone', () => {
+      yesScaleDumb = Math.min(2.4, yesScaleDumb + 0.12);
+      document.getElementById('dumb-yesBtn').style.transform = `translateY(-50%) scale(${yesScaleDumb})`;
+    });
+
+    applyRunawayLogic('custom-noBtn', 'custom-yesBtn', 'custom-zone', () => {
+      yesScaleCustom = Math.min(2.4, yesScaleCustom + 0.12);
+      document.getElementById('custom-yesBtn').style.transform = `translateY(-50%) scale(${yesScaleCustom})`;
+    });
+
+
+    /* ---------- SUCCESS RESOLUTION ---------- */
+    document.getElementById('gay-yesBtn').addEventListener("click", () => {
+      document.getElementById('gay-zone').style.display = 'none';
+      document.getElementById('gay-hint').style.display = 'none';
+      document.getElementById('gay-success').classList.remove('hidden');
+      fireRainbowConfetti();
+    });
+
+    document.getElementById('dumb-yesBtn').addEventListener("click", () => {
+      document.getElementById('dumb-zone').style.display = 'none';
+      document.getElementById('dumb-hint').style.display = 'none';
+      document.getElementById('dumb-success').classList.remove('hidden');
+      fireRainbowConfetti();
+    });
+
+    document.getElementById('custom-yesBtn').addEventListener("click", () => {
+      document.getElementById('custom-zone').style.display = 'none';
+      document.getElementById('custom-success').classList.remove('hidden');
+      fireRainbowConfetti();
+    });
+
+
+    /* ---------- FAKE HACKER SCAN LOGIC ---------- */
+    const consoleLogs = [
+      { text: "[INFO] Handshaking core interface with diagnostics terminal...", delay: 200 },
+      { text: "[OK] Hardware status connected. Display resolution calibrated.", delay: 400 },
+      { text: "[WARN] Scanning directories relative to host local files...", delay: 600 },
+      { text: "[INFO] Searching path: C:\\Users\\Rizwan Nizar\\Documents\\", delay: 900 },
+      { text: "[CRITICAL] Located directory: ...\\secret-anime-folder\\", delay: 1300 },
+      { text: "[CRITICAL] Located directory: ...\\unpaid-bills-receipts\\", delay: 1500 },
+      { text: "[OK] Local directory security keys matched.", delay: 1700 },
+      { text: "[INFO] Analyzing cognitive brain activity on connected user...", delay: 2000 },
+      { text: "[WARN] Cognitive data feed: 0.1 kilobits detected.", delay: 2400 },
+      { text: "[CRITICAL] ERROR: 'intelligence.dll' is missing or severely corrupted.", delay: 2800 },
+      { text: "[INFO] Auto-Downloading system patch: 'HowToTieShoes-10HourTutorial.mp4'...", delay: 3200 },
+      { text: "[INFO] 12% ... 48% ... 99% ... Completed.", delay: 3500 },
+      { text: "[WARN] Preparing visual override protocols...", delay: 3800 },
+      { text: "[OK] EXECUTING SYSTEM INJECTION IN 3... 2... 1...", delay: 4100 }
+    ];
+
+    function startHackerScan() {
+      document.getElementById('hacker-intro').classList.add('hidden');
+      const term = document.getElementById('hacker-terminal');
+      term.classList.remove('hidden');
+      term.innerHTML = '';
+
+      consoleLogs.forEach((log) => {
+        setTimeout(() => {
+          const line = document.createElement('div');
+          line.className = "mb-1";
+          
+          if (log.text.includes('[CRITICAL]')) {
+            line.innerHTML = `<span class="text-red-500 font-bold">${log.text.substring(0, 10)}</span>${log.text.substring(10)}`;
+          } else if (log.text.includes('[WARN]')) {
+            line.innerHTML = `<span class="text-yellow-400 font-bold">${log.text.substring(0, 6)}</span>${log.text.substring(6)}`;
+          } else if (log.text.includes('[OK]')) {
+            line.innerHTML = `<span class="text-cyan-400 font-bold">${log.text.substring(0, 4)}</span>${log.text.substring(4)}`;
+          } else {
+            line.innerHTML = log.text;
+          }
+
+          term.appendChild(line);
+          term.scrollTop = term.scrollHeight; // Keep scrolling down
+
+          // If this is the last log entry, trigger fake system override reveal
+          if (log === consoleLogs[consoleLogs.length - 1]) {
+            setTimeout(() => {
+              document.getElementById('hacker-reveal').classList.remove('hidden');
+            }, 1000);
+          }
+        }, log.delay);
+      });
+    }
+
+
+    /* ---------- DYNAMIC CUSTOM PRANK LINK ENGINE ---------- */
+    function buildPrankLink() {
+      const question = encodeURIComponent(document.getElementById('gen-question').value || "Are you a potato?");
+      const yes = encodeURIComponent(document.getElementById('gen-yes').value || "Yes");
+      const no = encodeURIComponent(document.getElementById('gen-no').value || "No");
+      const victim = encodeURIComponent(document.getElementById('gen-victim').value || "");
+
+      // Get current deployment origin
+      const currentUrl = window.location.origin + window.location.pathname;
+      const targetHash = `#prank=custom&q=${question}&yes=${yes}&no=${no}${victim ? '&v=' + victim : ''}`;
+      
+      const fullLink = currentUrl + targetHash;
+      
+      document.getElementById('gen-output').value = fullLink;
+      document.getElementById('gen-result').classList.remove('hidden');
+
+      // Reset Copy button status
+      document.getElementById('copyText').innerText = 'Copy';
+      document.getElementById('copyIcon').setAttribute('data-lucide', 'copy');
+      lucide.createIcons();
+    }
+
+    function copyGeneratedLink() {
+      const copyTextEl = document.getElementById('gen-output');
+      copyTextEl.select();
+      copyTextEl.setSelectionRange(0, 99999); // Mobile compatibility
+
+      try {
+        // Fallback for iframe sandboxes
+        document.execCommand('copy');
+        
+        // Show Success visual state on the button
+        document.getElementById('copyText').innerText = 'Copied!';
+        document.getElementById('copyIcon').setAttribute('data-lucide', 'check');
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Failed to copy', err);
+      }
+    }
+
+
+    /* ---------- ROUTER / DYNAMIC HASHTAG PAGE HANDLER ---------- */
+    function handleNavigationHash() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#prank=custom')) {
+        // Parse params
+        const params = new URLSearchParams(hash.replace('#prank=custom&', ''));
+        const q = params.get('q') || "Are you ready?";
+        const yesText = params.get('yes') || "Yes";
+        const noText = params.get('no') || "No";
+        const victimName = params.get('v') || "";
+
+        // Reset views and values
+        resetPrank('custom');
+        
+        // Populating parameters dynamically
+        document.getElementById('custom-heading').innerText = q;
+        document.getElementById('custom-yesBtn').innerText = yesText;
+        document.getElementById('custom-noBtn').innerText = noText;
+
+        if (victimName) {
+          document.getElementById('custom-greeting').innerText = `Special Diagnostic Request For ${decodeURIComponent(victimName)}`;
+          document.getElementById('custom-result-sub').innerText = `We logged your response, ${decodeURIComponent(victimName)}!`;
+        } else {
+          document.getElementById('custom-greeting').innerText = "Incoming Diagnostic Assessment Request...";
+          document.getElementById('custom-result-sub').innerText = "We successfully recorded your choice.";
+        }
+
+        showView('custom-load');
+      } else {
+        // Fall back to landing page if no custom tags
+        showView('home');
+      }
+    }
+
+    function clearHashAndHome() {
+      window.location.hash = '';
+      showView('home');
+    }
+
+    // Bind hash change event watchers
+    window.addEventListener('hashchange', handleNavigationHash);
+    window.addEventListener('load', () => {
+      handleNavigationHash();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+
+</html>
